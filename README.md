@@ -1,6 +1,8 @@
 # AndroidSnowfall-master —— 一个下雪效果的View
 
 ## 效果演示 ##
+![](/screenshots/demo.gif)
+
 ![](/screenshots/snowfall.gif)
 
 ## 使用方法 ##
