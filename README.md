@@ -28,3 +28,6 @@
         app:snowflakesFadingEnabled="true"
         app:snowflakesNum="450" />
 ```
+
+## 感谢 ##
+[Android-Snowfall](https://github.com/JetradarMobile/android-snowfall)
