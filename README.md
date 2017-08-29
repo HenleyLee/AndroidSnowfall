@@ -2,7 +2,9 @@
 
 ## 效果演示 ##
 
-![](/screenshots/snowfall.gif) ![](/screenshots/demo.gif)
+![](/screenshots/snowfall.gif)
+
+![](/screenshots/demo.gif)
 
 ## 使用方法 ##
 #### 默认的实现： ####
