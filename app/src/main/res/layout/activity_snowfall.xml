@@ -1,0 +1,23 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_snowfall"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background">
+
+    <com.liyunlong.snowfall.SnowfallView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:snowflakeAlphaMax="255"
+        app:snowflakeAlphaMin="150"
+        app:snowflakeAngleMax="10"
+        app:snowflakeImage="@drawable/snowflake"
+        app:snowflakeSizeMax="26dp"
+        app:snowflakeSizeMin="4dp"
+        app:snowflakeSpeedMax="12"
+        app:snowflakeSpeedMin="4"
+        app:snowflakesAlreadyFalling="false"
+        app:snowflakesFadingEnabled="true"
+        app:snowflakesNum="450" />
+
+</FrameLayout>
