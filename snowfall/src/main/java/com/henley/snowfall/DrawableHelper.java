@@ -1,4 +1,4 @@
-package com.liyunlong.snowfall;
+package com.henley.snowfall;
 
 import android.annotation.TargetApi;
 import android.graphics.Bitmap;
@@ -9,7 +9,7 @@ import android.graphics.drawable.VectorDrawable;
 import android.os.Build;
 
 /**
- * @author liyunlong
+ * @author Henley
  * @date 2017/8/28 15:19
  */
 final class DrawableHelper {

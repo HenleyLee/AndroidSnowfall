@@ -1,12 +1,11 @@
-package com.liyunlong.snowfall;
+package com.henley.snowfall;
 
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.Looper;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -16,7 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author liyunlong
+ * 下雪效果的View
+ *
+ * @author Henley
  * @date 2017/8/28 15:57
  */
 public class SnowfallView extends View {
@@ -45,7 +46,6 @@ public class SnowfallView extends View {
     private boolean snowflakesAlreadyFalling;
 
     private List<Snowflake> snowflakes;
-    private UpdateSnowflakesThread updateSnowflakesThread;
 
     public SnowfallView(Context context) {
         this(context, null);
@@ -78,8 +78,6 @@ public class SnowfallView extends View {
             typedArray.recycle();
         }
 
-        updateSnowflakesThread = new UpdateSnowflakesThread();
-
     }
 
     @Override
@@ -111,7 +109,7 @@ public class SnowfallView extends View {
     }
 
     private void updateSnowflakes() {
-        updateSnowflakesThread.handler.post(new Runnable() {
+        post(new Runnable() {
             @Override
             public void run() {
                 for (Snowflake snowflake : snowflakes) {
@@ -123,22 +121,22 @@ public class SnowfallView extends View {
     }
 
     private List<Snowflake> createSnowflakes() {
-        Snowflake.Params snowflakeParams = new Snowflake.Params();
-        snowflakeParams.parentWidth = getWidth();
-        snowflakeParams.parentHeight = getHeight();
-        snowflakeParams.image = snowflakeImage;
-        snowflakeParams.alphaMin = snowflakeAlphaMin;
-        snowflakeParams.alphaMax = snowflakeAlphaMax;
-        snowflakeParams.angleMax = snowflakeAngleMax;
-        snowflakeParams.sizeMinInPx = snowflakeSizeMinInPx;
-        snowflakeParams.sizeMaxInPx = snowflakeSizeMaxInPx;
-        snowflakeParams.speedMin = snowflakeSpeedMin;
-        snowflakeParams.speedMax = snowflakeSpeedMax;
-        snowflakeParams.fadingEnabled = snowflakesFadingEnabled;
-        snowflakeParams.alreadyFalling = snowflakesAlreadyFalling;
+        Params params = new Params();
+        params.parentWidth = getWidth();
+        params.parentHeight = getHeight();
+        params.image = snowflakeImage;
+        params.alphaMin = snowflakeAlphaMin;
+        params.alphaMax = snowflakeAlphaMax;
+        params.angleMax = snowflakeAngleMax;
+        params.sizeMinInPx = snowflakeSizeMinInPx;
+        params.sizeMaxInPx = snowflakeSizeMaxInPx;
+        params.speedMin = snowflakeSpeedMin;
+        params.speedMax = snowflakeSpeedMax;
+        params.fadingEnabled = snowflakesFadingEnabled;
+        params.alreadyFalling = snowflakesAlreadyFalling;
         List<Snowflake> snowflakes = new ArrayList<>(snowflakesNum);
         for (int i = 0; i < snowflakesNum; i++) {
-            snowflakes.add(new Snowflake(snowflakeParams));
+            snowflakes.add(new Snowflake(params));
         }
         return snowflakes;
     }
@@ -147,13 +145,91 @@ public class SnowfallView extends View {
         return (int) (dp * getResources().getDisplayMetrics().density);
     }
 
-    private static final class UpdateSnowflakesThread extends HandlerThread {
+    private static final class Snowflake {
 
-        private Handler handler = new Handler(Looper.myLooper());
+        private Params params;
+        private int size = 0;
+        private int alpha = 255;
+        private Bitmap bitmap = null;
+        private double speedX = 0.0;
+        private double speedY = 0.0;
+        private double positionX = 0.0;
+        private double positionY = 0.0;
+        private Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private Randomizer randomizer = new Randomizer();
 
-        UpdateSnowflakesThread() {
-            super("SnowflakesComputations");
+        Snowflake(Params params) {
+            this.params = params;
+            init();
+        }
+
+        void init() {
+            paint.setColor(Color.rgb(255, 255, 255));
+            paint.setStyle(Paint.Style.FILL);
+            reset(null);
+        }
+
+        void reset(Double positionY) {
+            size = randomizer.randomInt(params.sizeMinInPx, params.sizeMaxInPx, true);
+            if (params.image != null) {
+                bitmap = Bitmap.createScaledBitmap(params.image, size, size, false);
+            }
+
+            double speed = ((float) (size - params.sizeMinInPx) / (params.sizeMaxInPx - params.sizeMinInPx) *
+                    (params.speedMax - params.speedMin) + params.speedMin);
+            double angle = Math.toRadians(randomizer.randomDouble(params.angleMax) * randomizer.randomSignum());
+            speedX = speed * Math.sin(angle);
+            speedY = speed * Math.cos(angle);
+
+            alpha = randomizer.randomInt(params.alphaMin, params.alphaMax);
+            paint.setAlpha(alpha);
+
+            positionX = randomizer.randomDouble(params.parentWidth);
+            if (positionY != null) {
+                this.positionY = positionY;
+            } else {
+                this.positionY = randomizer.randomDouble(params.parentHeight);
+                if (!params.alreadyFalling) {
+                    this.positionY = this.positionY - params.parentHeight - size;
+                }
+            }
+        }
+
+        void update() {
+            positionX += speedX;
+            positionY += speedY;
+            if (positionY > params.parentHeight) {
+                positionY = (double) -size;
+                reset(positionY);
+            }
+            if (params.fadingEnabled) {
+                paint.setAlpha((int) (alpha * ((float) (params.parentHeight - positionY) / params.parentHeight)));
+            }
+        }
+
+        void draw(Canvas canvas) {
+            if (bitmap != null) {
+                canvas.drawBitmap(bitmap, (float) positionX, (float) positionY, paint);
+            } else {
+                canvas.drawCircle((float) positionX, (float) positionY, (float) size, paint);
+            }
         }
 
     }
+
+    private static final class Params {
+        Bitmap image;
+        int parentWidth;
+        int parentHeight;
+        int alphaMin;
+        int alphaMax;
+        int angleMax;
+        int sizeMinInPx;
+        int sizeMaxInPx;
+        int speedMin;
+        int speedMax;
+        boolean fadingEnabled;
+        boolean alreadyFalling;
+    }
+
 }

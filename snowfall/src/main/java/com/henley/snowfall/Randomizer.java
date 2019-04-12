@@ -1,9 +1,9 @@
-package com.liyunlong.snowfall;
+package com.henley.snowfall;
 
 import java.util.Random;
 
 /**
- * @author liyunlong
+ * @author Henley
  * @date 2017/8/28 14:55
  */
 final class Randomizer {
