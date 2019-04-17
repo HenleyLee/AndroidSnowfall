@@ -6,7 +6,15 @@
 
 ![](/screenshots/demo.gif)
 
-## APK Demo ##
+## Download ##
+### Gradle ###
+```gradle
+dependencies {
+    implementation 'com.henley.snowfall:snowfall:1.0.0'
+}
+```
+
+### APK Demo ###
 
 下载 [APK-Demo](https://github.com/HenleyLee/AndroidSnowfall/raw/master/app/app-release.apk)
 
