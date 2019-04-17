@@ -42,5 +42,6 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "com.android.support:appcompat-v7:$supportVersion"
-    implementation project(':snowfall')
+//    implementation project(':snowfall')
+    implementation 'com.henley.snowfall:snowfall:1.0.0'
 }

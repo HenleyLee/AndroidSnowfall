@@ -14,6 +14,7 @@ import android.os.Build;
  */
 final class DrawableHelper {
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     static Bitmap toBitmap(Drawable drawable) {
         if (drawable instanceof BitmapDrawable) {
             return ((BitmapDrawable) drawable).getBitmap();
