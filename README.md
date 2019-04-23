@@ -10,7 +10,7 @@
 ### Gradle ###
 ```gradle
 dependencies {
-    implementation 'com.henley.snowfall:snowfall:1.0.0'
+    implementation 'com.henley.android:snowfall:1.0.0'
 }
 ```
 

@@ -19,9 +19,10 @@ def siteUrl = 'https://github.com/HenleyLee/AndroidSnowfall'
 
 publish {
     userOrg = 'henleylee'
-    groupId = 'com.henley.snowfall'
+    groupId = 'com.henley.android'
     artifactId = 'snowfall'
     publishVersion = '1.0.0'
+    uploadName = 'Snowfall'
     desc = '一个下雪效果的 View。'
     website = siteUrl
 }
